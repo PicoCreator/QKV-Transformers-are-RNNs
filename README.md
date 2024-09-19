@@ -96,3 +96,28 @@ for layer_idx in range(len(kv_cache_x)):
        kv_cache_x[layer_idx][kv_idx][:, :, needle_pos:needle_pos+1] = 0
 ```
 
+We then either substitute the target token embedding, or zero it out respectively.
+
+> @ TODO : Example digram of how we modify
+
+Resulting into the following effect (list was shorten for simplicity, refer to notebook for larger outputs)
+
+![Table of llama3 results, with modification](./imgs/small-prompt-table-of-outcomes.png)
+
+### Model works with zero-ed out needle token state
+
+In both cases, the model was able to answer, despite having the "needle token" essentially removed.
+Providing sold proof that it's embedding information, is stored recurrently into future tokens, which are subsequently used to answer the question.
+
+### Model is semi-resistent to needle token being replaced
+
+In the scenerio where we replaced the needle token, with another city state. Both of the following scenerio occurs.
+
+Needle token embedding
+- **is significant enough:** that the attention mechanic pays attention to it, in favour over the recurrent embedding values
+- **is not-significant enough:** that the recurrent embedding values, are paid attention to instead (this is more significant, in implications)
+
+Depending on the prompt, chain of thought, or the token - either outcome are possible
+
+## Implication
+
