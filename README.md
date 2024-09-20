@@ -146,7 +146,7 @@ In overall, it will also help explain, how thinking tokens, and chain of thought
 
 ## Larger Implications
 
-One of the advantages transformer QKV attention has over older RNN recurrent LSTM designs, is how it has, substantially larger VRAM size and which grows over the number of tokens (that it works in training). Giving the model the ability to retain access to older recurrent state (which will not get zero-ed out)
+One of the advantages transformer QKV attention has over older RNN recurrent LSTM designs, is how it has, substantially larger VRAM size which grows over the number of tokens (also LSTM does not scale in training). Giving the model the ability to retain access to older recurrent state (which will not get zero-ed out)
 
 But, if QKV are just recurrent states. What is its big difference when compared to the progress of newer Recurrent LLM, like RWKV, StateSpace, XLSTM, being developed With substantially larger state size compared to LSTM. 
 
