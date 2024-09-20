@@ -165,13 +165,13 @@ It does raises the question?; How much of the transformer performance advantages
 | Theorectical RWKV / SSM scaled up model | 800 MB | 160k |
 | Theorectical RWKV / SSM scaled up model | 1.6 GB | 320k |
 
-Will we see a convergence between the two architecture branches
+Will we see a convergence between the two architecture branches?
 - As recurrent model state size scales up, increases, and catches up with transformer context sizes
 - As transformer models get capped to specific “sliding window attention” sizes for system VRAM capacity constraints. (There is only so much VRAM you can afford per request, large 405B models with large context length is counted in TB's of VRAM)
 
-What happens when the recurrent model state is larger or equal to the transformer model KV state size, in terms of model performance.
+What happens when the recurrent model state is larger or equal to the transformer model KV state size, in terms of model performance?
 
-What if the entire attention vs recurrent model debate, is really all about how we manage the state size of the model.
+What if the entire attention vs recurrent model debate, is really all about how we manage the state size of the model, and make use of it?
 
 ## Lets dive deeper into the embeddings
 
