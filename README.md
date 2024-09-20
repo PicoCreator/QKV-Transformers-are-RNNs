@@ -1,4 +1,4 @@
-# QKV Transformers are RNN models with extra steps and memory capacity
+# QKV Transformer Embeddings are RNN Embeddings with extra steps and memory capacity
 
 **Author: Eugene Cheah ( @picocreator )**
 
