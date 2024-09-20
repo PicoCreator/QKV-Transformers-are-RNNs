@@ -121,25 +121,34 @@ Depending on the prompt, chain of thought, or the token - either outcome are pos
 
 Transformers QKV Attention, is typically framed / understood as, paying attention to the various specific tokens while generating the output token.
 
-![Flawed view and understanding of QKV](./imgs/qkv-flawed-understanding.drawio.png)
+| |
+|---|
+| ![Flawed view and understanding of QKV](./imgs/qkv-flawed-understanding.drawio.png)|
+||
 
 However this might be an oversimplification, which only happens on the first few layers.
 
-**It would be more accurate to view QKV attention, as paying “attention” to “recurrent states” at various points in time. And not just the token itself.**
+> **It would be more accurate to view QKV attention, as paying “attention” to “recurrent states” at various points in time. And not just the token itself.**
 
-![QKV Attention working on recurrent state across layers and tokens](./imgs/qkv-recurrent-view.drawio.png)
+| |
+|---|
+| ![QKV Attention working on recurrent state across layers and tokens](./imgs/qkv-recurrent-view.drawio.png) |
+||
 
-It would also help to explain how the model would be resistent to changes when we either zero out, or replace the needle token
+It would also help to explain how the model would be resistent to changes when we either zero out, or replace the needle token (the purple embedding blocks below)
 
-![QKV Attention working with corrupted needle](./imgs/qkv-corrupted-recurrent-view.drawio.png)
+| |
+|---|
+| ![QKV Attention working with corrupted needle](./imgs/qkv-corrupted-recurrent-view.drawio.png) |
+||
 
-This would also help explain how thinking tokens, and chain of thought works, where it allows the model to develop and store its understanding into the newer tokens respectively. As part of the process in building an answer.
+In overall, it will also help explain, how thinking tokens, and chain of thought works, where it allows the model to develop and store its understanding into the newer tokens respectively. As part of the process in building an answer. In addition to accuracy via reptition of key words.
 
 ## Larger Implications
 
-One of the advantages this has over older RNN recurrent LSTM designs, is how it has, substantially larger VRAM size and which grows over the number of tokens (that it works in training). Giving the model the ability to retain access to older recurrent state (which will not get zero-ed out)
+One of the advantages transformer QKV attention has over older RNN recurrent LSTM designs, is how it has, substantially larger VRAM size and which grows over the number of tokens (that it works in training). Giving the model the ability to retain access to older recurrent state (which will not get zero-ed out)
 
-But, if QKV are just recurrent states. With the progress of Recurrent LLM, like RWKV, StateSpace, XLSTM, being developed With substantially larger state size compared to LSTM. 
+But, if QKV are just recurrent states. What is its big difference when compared to the progress of newer Recurrent LLM, like RWKV, StateSpace, XLSTM, being developed With substantially larger state size compared to LSTM. 
 
 It does raises the question?; How much of the transformer performance advantages from these new recurrent model is simply from having access to a much larger state (eg. multi gigabyte transformer states for a few thousand tokens).
 
