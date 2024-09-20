@@ -13,7 +13,7 @@ We subsequently modify the KV cache, to remove "the needle" and prove that the s
 ## Implementation
 
 All notebook files, can be found in this repo. The following is the key highlights (simplified).
-With examples taken from the [./llama3-8b-short-prompt.ipynb](./llama3-8b-long-prompt.ipynb) file.
+With examples taken from the [./llama3-8b-short-prompt.ipynb](./llama3-8b-short-prompt.ipynb) file.
 
 We start by importing and loading the respective model (llama 3.1-8B instruct in this case)
 
@@ -133,6 +133,8 @@ It would also help to explain how the model would be resistent to changes when w
 
 ![QKV Attention working with corrupted needle](./imgs/qkv-corrupted-recurrent-view.drawio.png)
 
+This would also help explain how thinking tokens, and chain of thought works, where it allows the model to develop and store its understanding into the newer tokens respectively. As part of the process in building an answer.
+
 ## Larger Implications
 
 One of the advantages this has over older RNN recurrent LSTM designs, is how it has, substantially larger VRAM size and which grows over the number of tokens (that it works in training). Giving the model the ability to retain access to older recurrent state (which will not get zero-ed out)
@@ -160,10 +162,72 @@ Will we see a convergence between the two architecture branches
 
 What happens when the recurrent model state is larger or equal to the transformer model KV state size, in terms of model performance.
 
+What if the entire attention vs recurrent model debate, is really all about how we manage the state size of the model.
+
 **plug**
 
 If all of this makes sense for you. Consider supporting the [RWKV project](https://wiki.rwkv.com) =)
-Or using one of our platforms like [featherless.ai](https://featherless.ai) which will help support and fund our opensource RWKV model work.
+Or using one of our platforms like [featherless.ai](https://featherless.ai), where you can run any huggingface model, and will help support and fund our opensource RWKV model work.
 
 ## Lets dive deeper into the embeddings
 
+The following was taken from the larger prompt [./llama3-8b-long-prompt.ipynb](./llama3-8b-long-prompt.ipynb) varient.
+Where we do a deep dive into how the embeddings in the KV cache differs across both prompt, with 1 token change.
+
+The delta was built using the following
+
+```python
+delta_kv_state = copy.deepcopy(sf_kv_cache)
+for layer_idx in range(len(delta_kv_state)):
+    for kv_idx in range(2):
+        delta_kv_state[layer_idx][kv_idx][:] -= ny_kv_cache[layer_idx][kv_idx][:]
+```
+
+which results into the following observations
+
+> Y axis represents the token position (0-160), 
+> X axies representing the embedding values in a layer
+> Blue is positive value difference, Red is negative, White is no change.
+> ( Refer to the notebook for more detail heat maps )
+
+### Minimal change on first ~3 layers
+
+![layer3-k-delta](./imgs/layer3-k-delta.png)
+![layer3-v-delta](./imgs/layer3-v-delta.png)
+
+While there will be obvious large changes on "the needle" token representing SF or NY. At position 7 (aka token 8)
+
+For the subsequent tokens, as most of the attention is on the incoming text embeding, minimal deltas are observed (you can see small amounts if you squint)
+
+### Noticable changes on layer 8 (and beyond)
+
+![layer8-k-delta](./imgs/layer8-k-delta.png)
+![layer8-v-delta](./imgs/layer8-v-delta.png)
+
+Subsequently, we start to notice changes in the K/V values not just on the needle token. But its subsequent tokens which it influences on.
+
+We start seeing slightly, early bands of lines, which the model seems to reinforces the information into K/V cache store, as hotspots at approximately 30, 50, 100, 150.
+
+This trend would be seen strengthen in subsequent layers
+
+### Dramatic changes around layer 28 (towards the end of the model, especially the V state)
+
+![layer28-k-delta](./imgs/layer28-k-delta.png)
+![layer28-v-delta](./imgs/layer28-v-delta.png)
+
+We start to see stronger amplification, and divergence in the value store, in the upper layers. Reinforcing the respective information. 
+
+This is consistent with the hypothesis that the upper layers may be a larger mixture of recurrent information (from the lower layers), mixed in over the embedding token. Creating larger and larger differences.
+
+### Why are the diverging amplification important
+
+If no recurrent information is being stored in the KV cache embedding down the layers. Since the text is exactly the same, we should expect the divergence to be minimal (white).
+
+However, as a divergence, in KV embedding values can be found. Even throughout the later distant token, with the exact same text. We can presume some form of recurrent data is being passed from 1 token embedding to another (possibly in a cascading fashion)
+
+Proving that the KV cache is recurrent in nature. As the next token embedding will be built incorporating the historical embeddings, from various previous tokens.
+
+**plug**
+
+If all of this makes sense for you. Consider supporting the [RWKV project](https://wiki.rwkv.com) =)
+Or using one of our platforms like [featherless.ai](https://featherless.ai), where you can run any huggingface model, and will help support and fund our opensource RWKV model work.
