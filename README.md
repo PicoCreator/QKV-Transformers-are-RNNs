@@ -98,8 +98,6 @@ for layer_idx in range(len(kv_cache_x)):
 
 We then either substitute the target token embedding, or zero it out respectively.
 
-> @ TODO : Example digram of how we modify
-
 Resulting into the following effect (list was shorten for simplicity, refer to notebook for larger outputs)
 
 ![Table of llama3 results, with modification](./imgs/small-prompt-table-of-outcomes.png)
@@ -119,5 +117,53 @@ Needle token embedding
 
 Depending on the prompt, chain of thought, or the token - either outcome are possible
 
-## Implication
+## Immediate Implication
+
+Transformers QKV Attention, is typically framed / understood as, paying attention to the various specific tokens while generating the output token.
+
+![Flawed view and understanding of QKV](./imgs/qkv-flawed-understanding.drawio.png)
+
+However this might be an oversimplification, which only happens on the first few layers.
+
+**It would be more accurate to view QKV attention, as paying “attention” to “recurrent states” at various points in time. And not just the token itself.**
+
+![QKV Attention working on recurrent state across layers and tokens](./imgs/qkv-recurrent-view.drawio.png)
+
+It would also help to explain how the model would be resistent to changes when we either zero out, or replace the needle token
+
+![QKV Attention working with corrupted needle](./imgs/qkv-corrupted-recurrent-view.drawio.png)
+
+## Larger Implications
+
+One of the advantages this has over older RNN recurrent LSTM designs, is how it has, substantially larger VRAM size and which grows over the number of tokens (that it works in training). Giving the model the ability to retain access to older recurrent state (which will not get zero-ed out)
+
+But, if QKV are just recurrent states. With the progress of Recurrent LLM, like RWKV, StateSpace, XLSTM, being developed With substantially larger state size compared to LSTM. 
+
+It does raises the question?; How much of the transformer performance advantages from these new recurrent model is simply from having access to a much larger state (eg. multi gigabyte transformer states for a few thousand tokens).
+
+| Architecture | VRAM State Size | Effective Context Length |
+|---|---|---|
+| RWKV 7B v4 Raven | 4 MB | 2k |
+| RWKV 7B v5 Eagle | 40 MB | 4k |
+| RWKV 14B v6 Finch | 80 MB | 16k |
+| LLaMA 7B (2k) | 400 MB | 2K |
+| LLaMA 7B (4k) | 780 MB | 4k |
+| LLaMA 7B (8k) | 1.53 GB | 8k |
+| LLaMA 7B (32k) | 6.04 GB | 32k |
+| LLaMA 7B (320k) | 60.18 GB | 320k |
+| Theorectical RWKV / SSM scaled up model | 800 MB | 160k |
+| Theorectical RWKV / SSM scaled up model | 1.6 GB | 320k |
+
+Will we see a convergence between the two architecture branches
+- As recurrent model state size scales up, increases, and catches up with transformer context sizes
+- As transformer models get capped to specific “sliding window attention” sizes for system VRAM capacity constraints. (There is only so much VRAM you can afford per request, large 405B models with large context length is counted in TB's of VRAM)
+
+What happens when the recurrent model state is larger or equal to the transformer model KV state size, in terms of model performance.
+
+**plug**
+
+If all of this makes sense for you. Consider supporting the [RWKV project](https://wiki.rwkv.com) =)
+Or using one of our platforms like [featherless.ai](https://featherless.ai) which will help support and fund our opensource RWKV model work.
+
+## Lets dive deeper into the embeddings
 
