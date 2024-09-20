@@ -168,6 +168,7 @@ It does raises the question?; How much of the transformer performance advantages
 Will we see a convergence between the two architecture branches?
 - As recurrent model state size scales up, increases, and catches up with transformer context sizes
 - As transformer models get capped to specific “sliding window attention” sizes for system VRAM capacity constraints. (There is only so much VRAM you can afford per request, large 405B models with large context length is counted in TB's of VRAM)
+- Or a trade off between one or another, between scalability and accuracy
 
 What happens when the recurrent model state is larger or equal to the transformer model KV state size, in terms of model performance?
 
