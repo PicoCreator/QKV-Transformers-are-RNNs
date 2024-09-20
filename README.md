@@ -164,12 +164,6 @@ What happens when the recurrent model state is larger or equal to the transforme
 
 What if the entire attention vs recurrent model debate, is really all about how we manage the state size of the model.
 
-**plug**
-
-If all of this makes sense for you. Consider supporting the transformer killer, the [RWKV project](https://wiki.rwkv.com) =)  
-
-Or using one of our platforms like [featherless.ai](https://featherless.ai), where you can run any huggingface model, and will help support and fund our opensource RWKV model work.
-
 ## Lets dive deeper into the embeddings
 
 The following was taken from the larger prompt [./llama3-8b-long-prompt.ipynb](./llama3-8b-long-prompt.ipynb) varient.
@@ -228,8 +222,10 @@ However, as a divergence, in KV embedding values can be found. Even throughout t
 
 Proving that the KV cache is recurrent in nature. As the next token embedding will be built incorporating the historical embeddings, from various previous tokens.
 
-**plug**
+### Shamless Plug
 
 If all of this makes sense for you. Consider supporting the transformer killer, the [RWKV project](https://wiki.rwkv.com) =)  
+
+Following me at twitter [@PicoCreator](https://x.com/picocreator)
 
 Or using one of our platforms like [featherless.ai](https://featherless.ai), where you can run any huggingface model, and will help support and fund our opensource RWKV model work.
