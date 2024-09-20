@@ -166,7 +166,8 @@ What if the entire attention vs recurrent model debate, is really all about how 
 
 **plug**
 
-If all of this makes sense for you. Consider supporting the [RWKV project](https://wiki.rwkv.com) =)
+If all of this makes sense for you. Consider supporting the transformer killer, the [RWKV project](https://wiki.rwkv.com) =)  
+
 Or using one of our platforms like [featherless.ai](https://featherless.ai), where you can run any huggingface model, and will help support and fund our opensource RWKV model work.
 
 ## Lets dive deeper into the embeddings
@@ -229,5 +230,6 @@ Proving that the KV cache is recurrent in nature. As the next token embedding wi
 
 **plug**
 
-If all of this makes sense for you. Consider supporting the [RWKV project](https://wiki.rwkv.com) =)
+If all of this makes sense for you. Consider supporting the transformer killer, the [RWKV project](https://wiki.rwkv.com) =)  
+
 Or using one of our platforms like [featherless.ai](https://featherless.ai), where you can run any huggingface model, and will help support and fund our opensource RWKV model work.
